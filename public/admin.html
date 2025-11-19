@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>🎮 Admin Control Panel</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f8f9fa;
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    td,
+    th {
+      padding: 10px 15px;
+    }
+
+    input {
+      width: 80px;
+      text-align: center;
+    }
+
+    button {
+      background: #0077b6;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005f89;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🎮 Admin Control Panel</h1>
+  <table id="table"></table>
+
+  <script>
+    const socket = io();
+
+    function renderTable(players) {
+      document.getElementById("table").innerHTML = `
+        <tr><th>Avatar</th><th>Player</th><th>Score</th><th>Action</th></tr>
+        ${players.map(p => `
+          <tr>
+            <td><img src="${p.avatar}" alt="${p.name}"></td>
+            <td>${p.name}</td>
+            <td><input type="number" id="score-${p.name}" value="${p.score}"></td>
+            <td><button onclick="update('${p.name}')">Update</button></td>
+          </tr>
+        `).join("")}
+      `;
+    }
+
+    function update(name) {
+      const value = parseInt(document.getElementById(`score-${name}`).value);
+      socket.emit("updateScore", { name, score: value });
+    }
+
+    socket.on("scoreUpdate", (players) => {
+      renderTable(players);
+    });
+  </script>
+</body>
+
+</html>
