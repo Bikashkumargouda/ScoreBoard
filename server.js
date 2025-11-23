@@ -4,6 +4,7 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
 app.use(express.static("public"));
+app.use(express.json());
 
 let players = [
   { name: "Sudhi", score: 0, avatar: "avatars/Sudhi.jpg" },
@@ -20,9 +21,18 @@ io.on("connection", (socket) => {
   console.log("A user connected");
   socket.emit("scoreUpdate", players);
 
-  socket.on("updateScore", (data) => {
-    const player = players.find((p) => p.name === data.name);
-    if (player) player.score = data.score;
+  // Update ALL scores at once
+  socket.on("updateAllScores", (updatedPlayers) => {
+    updatedPlayers.forEach((updated) => {
+      const p = players.find((x) => x.name === updated.name);
+      if (p) p.score = updated.score;
+    });
+    io.emit("scoreUpdate", players);
+  });
+
+  // Reset all scores
+  socket.on("resetScores", () => {
+    players.forEach((p) => (p.score = 0));
     io.emit("scoreUpdate", players);
   });
 
@@ -31,7 +41,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });

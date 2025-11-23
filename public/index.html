@@ -2,9 +2,10 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>🏆 Live Game Scoreboard 🏆</title>
   <script src="/socket.io/socket.io.js"></script>
+
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
@@ -14,21 +15,38 @@
 
     h1 {
       text-align: center;
-      color: #333;
       margin-bottom: 40px;
+      color: #333;
     }
 
     .bar-container {
       width: 80%;
-      margin: 15px auto;
+      margin: 20px auto;
+      height: 60px;
       background: #e0e0e0;
       border-radius: 10px;
-      height: 60px;
       overflow: hidden;
       position: relative;
       display: flex;
       align-items: center;
-      padding-left: 70px;
+      padding-left: 80px;
+    }
+
+    .avatar {
+      position: absolute;
+      left: 15px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #999;
+    }
+
+    .player-name {
+      position: absolute;
+      left: 80px;
+      font-weight: bold;
+      color: #333;
     }
 
     .bar {
@@ -39,26 +57,7 @@
       line-height: 60px;
       color: white;
       font-weight: bold;
-      transition: width 0.6s ease;
-    }
-
-    .player-name {
-      position: absolute;
-      left: 80px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-weight: bold;
-      color: #333;
-    }
-
-    .avatar {
-      position: absolute;
-      left: 15px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: 2px solid #ccc;
-      object-fit: cover;
+      transition: width 0.5s ease-in-out;
     }
   </style>
 </head>
@@ -72,24 +71,23 @@
 
     function renderBoard(players) {
       const maxScore = Math.max(...players.map(p => p.score)) || 1;
-      const container = document.getElementById("scoreboard");
-      container.innerHTML = players
-        .sort((a, b) => b.score - a.score)
-        .map((p, index) => `
+
+      document.getElementById("scoreboard").innerHTML =
+        players
+          .sort((a, b) => b.score - a.score)
+          .map((p, i) => `
           <div class="bar-container">
-            <img src="${p.avatar}" alt="${p.name}" class="avatar">
+            <img src="${p.avatar}" class="avatar" />
             <div class="player-name">${p.name}</div>
-            <div class="bar" style="width:${(p.score / maxScore) * 100}%; background:${["#0077b6", "#00b4d8", "#48cae4", "#90e0ef", "#caf0f8"][index % 5]};">
+            <div class="bar" style="width: ${(p.score / maxScore) * 100}%; background: ${["#0077b6", "#00b4d8", "#48cae4", "#90e0ef", "#caf0f8"][i % 5]}">
               ${p.score}
             </div>
           </div>
         `)
-        .join("");
+          .join("");
     }
 
-    socket.on("scoreUpdate", (players) => {
-      renderBoard(players);
-    });
+    socket.on("scoreUpdate", (players) => renderBoard(players));
   </script>
 </body>
 
