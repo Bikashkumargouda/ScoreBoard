@@ -7,14 +7,14 @@ app.use(express.static("public"));
 app.use(express.json());
 
 let players = [
-  { name: "Sudhi", score: 0, avatar: "avatars/Sudhi.jpg" },
-  { name: "Sony", score: 0, avatar: "avatars/Sony.jpg" },
-  { name: "Sanjay", score: 0, avatar: "avatars/Sanjay.jpg" },
-  { name: "Navin", score: 0, avatar: "avatars/Navin.jpg" },
-  { name: "Sanghaamitra", score: 0, avatar: "avatars/Sanghamitra.jpg" },
-  { name: "Subrat", score: 0, avatar: "avatars/Subrat.jpg" },
-  { name: "Harish", score: 0, avatar: "avatars/Harish.jpg" },
-  { name: "Artun", score: 0, avatar: "avatars/Artun.jpg" },
+  { name: "Mr. Sudhi", score: 0, avatar: "avatars/Sudhi.jpg" },
+  { name: "Ms. Sony", score: 0, avatar: "avatars/Sony.jpg" },
+  { name: "Mr. Sanjaya", score: 0, avatar: "avatars/Sanjay.jpg" },
+  { name: "Mr. Nabin", score: 0, avatar: "avatars/Navin.jpg" },
+  { name: "Ms. Sanghamitra", score: 0, avatar: "avatars/Sanghamitra.jpg" },
+  { name: "Mr. Subrata", score: 0, avatar: "avatars/Subrat.jpg" },
+  { name: "Mr. Harish", score: 0, avatar: "avatars/Harish.jpg" },
+  { name: "Mr. Atanu", score: 0, avatar: "avatars/Artun.jpg" },
 ];
 
 io.on("connection", (socket) => {
